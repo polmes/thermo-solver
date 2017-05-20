@@ -8,25 +8,24 @@
 #include <vector>
 
 class Mesh {
+	private:
+		std::vector<double> line;
+		std::string name;
 
-private:
-	std::vector<double> line;
-	std::string name;
+	public:
+		// Constructor
+		Mesh(uint8_t, std::string);
 
-public:
-	// Constructor
-	Mesh(uint8_t, std::string);
+		// Destructor
+		// ~Mesh();
 
-	// Destructor
-	// ~Mesh();
-
-	// Methods
-	void printVector() {
-		for (uint8_t i = 0; i < line.size(); ++i) {
-			std::cout << line[i] << std::endl;
+		// Methods
+		void printVector() {
+			for (uint8_t i = 0; i < line.size(); ++i) {
+				std::cout << line[i] << std::endl;
+			}
 		}
-	}
-	void anotherMethod();
+		void anotherMethod();
 };
 
 Mesh::Mesh(uint8_t N, std::string str): name(str) {
@@ -42,8 +41,7 @@ void Mesh::anotherMethod() {
 
 const uint8_t N = 50;
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
 	Mesh mesh(N, "damn");
 	mesh.printVector();
 	mesh.anotherMethod();
