@@ -1,2 +1,2 @@
-# heat-solver
-Conduction Heat Transfer using Finite Volumes
+# Thermodynamics Simulation
+Heat Transfer simulator using a Finite Volumes solver for Gas Dynamics
