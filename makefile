@@ -1,12 +1,12 @@
-CC=g++-6
-CFLAGS=-std=c++14 -g -O3 -c -Wall -pedantic
-LDFLAGS=-std=c++14 -g
-# Might want to add -pthread in the future
+CC = g++-6
+CFLAGS = -std=c++14 -g -O3 -c -Wall -pedantic
+LFLAGS = -std=c++14 -g
+# Might want to add LIBS = -pthread, etc. in the future
 
-EXE=thermo
+EXE = thermo
 
 $(EXE): obj/main.o obj/mesh.o obj/volume.o
-	$(CC) $(LDFLAGS) obj/*.o -o $(EXE)
+	$(CC) $(LFLAGS) obj/*.o -o $(EXE)
 
 obj/main.o: main.cpp mesh.hpp
 	$(CC) $(CFLAGS) main.cpp -o obj/main.o
