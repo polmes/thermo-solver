@@ -12,7 +12,7 @@
 
 // Read config file and get all consts
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char** argv) {
 	Mesh mesh(M, N);
 	mesh.printMatrix();
 
