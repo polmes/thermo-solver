@@ -1,8 +1,14 @@
 # Thermodynamics Simulation
-Heat Transfer simulator using a Finite Volumes solver for "Gas Dynamics"
+Heat Transfer simulator using a Finite Volumes solver for *Gas Dynamics*
 
-## Current features
-* 2D conduction simulation with multiple materials
+## Phase 1 (*currently under development*)
+- 2D transient conduction analysis with multiple materials
 
-## Expected features
-* Convection simulation using CFD (Navier-Stokes discretization)
+## Phase 2
+- Navier-Stokes discretization: mass + momentum + (energy)
+
+## Phase 3
+- Convection with 2D laminar flow
+
+## Phase 4
+- Convection with 3D turbulent flow
