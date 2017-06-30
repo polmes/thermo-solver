@@ -1,20 +1,28 @@
+// My libraries
 #include "volume.hpp"
+#include "util.cpp"
 
 class Mesh {
 	private:
-		const uint8_t M, N;
+		const unsigned int M, N;
 		std::vector< std::vector<Volume> > volumes; // 2D
+
+		// Global coordinates
+		std::vector< std::vector<double> > X; // boundaries
+		std::vector< std::vector<double> > x; // nodes
 
 	protected:
 		// Sth else
 
 	public:
 		// Constructor
-		Mesh(uint8_t _M, uint8_t _N);
+		Mesh(unsigned int _M, unsigned int _N, std::vector<Material> materials);
 
 		// Destructor
 		// ~Mesh();
 
 		// Methods
 		void printMatrix();
+
+		// regions
 };
