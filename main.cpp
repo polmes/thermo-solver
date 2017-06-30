@@ -6,6 +6,7 @@
 #include <cmath>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <thread>
 #include <stdexcept>
 
@@ -20,7 +21,12 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	Mesh mesh(M, N);
+	std::vector<Material> materials;
+	Material material;
+	materials.push_back(material({{0.0, 0.0}, {0.5, 0.4}}, 1500.0, 750.0, 170.0));
+	materials.push_back(material({{0.5, 0.0}, {1.1, 0.7}}, 1600.0, 770.0, 140.0));
+
+	Mesh mesh(10, 20, materials);
 	mesh.printMatrix();
 
 	return 0;
