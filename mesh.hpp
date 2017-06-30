@@ -1,10 +1,16 @@
+// Standard libraries
+#include "headers.hpp"
+
 // My libraries
-#include "volume.hpp"
-#include "util.cpp"
+#ifndef INCLUDE_VOLUME
+	#include "volume.hpp"
+	#define INCLUDE_VOLUME
+#endif
 
 class Mesh {
 	private:
-		const unsigned int M, N;
+		// const unsigned int M, N;
+		std::vector<unsigned int> N;
 		std::vector< std::vector<Volume> > volumes; // 2D
 
 		// Global coordinates
@@ -16,13 +22,13 @@ class Mesh {
 
 	public:
 		// Constructor
-		Mesh(unsigned int _M, unsigned int _N, std::vector<Material> materials);
+		Mesh(std::vector<unsigned int> _N, std::vector<Material> materials);
 
 		// Destructor
 		// ~Mesh();
 
 		// Methods
-		void printMatrix();
+		// void printMatrix();
 
 		// regions
 };
