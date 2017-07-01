@@ -13,7 +13,7 @@ class Volume {
 		double aE, aW, aN, aS, aP, bP;
 		Material material;
 		bool isBoundary; // boundary = 'w' 'e' 'n' 's' 0
-		std::vector<double> x;
+		std::vector<double> x, S;
 		double V;
 
 	protected:
@@ -21,9 +21,9 @@ class Volume {
 
 	public:
 		// Constructor
-		Volume(std::vector<double> _x, Material _material);
+		Volume(std::vector<double> _x, Material _material, std::vector<double> _S, double _V);
 
 		// Methods
 		std::vector<double> getX();
-		void getCoefficients(double &aE, double &aW, double &aN, double &aS, double &aP, double &bP);
+		void computeCoefficients(double &aE, double &aW, double &aN, double &aS, double &aP, double &bP);
 };

@@ -53,12 +53,13 @@ Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double
 
 	// Initialize MxN matrix
 	volumes.resize(N[0]); // reserve if we only wanted to pre-allocate
-	std::vector<double> x;
+	std::vector<double> x, S;
 	for (std::vector<double>::size_type i = 1; i < X[0].size(); i++) {
 		// std::vector<Volume> volumes1D;
 		for (std::vector<double>::size_type j = 1; j < X[1].size(); j++) {
 			x = {(X[0][i-1] + X[0][i]) / 2, (X[1][j-1] + X[1][j]) / 2};
-			volumes[i-1].push_back(Volume(x, findMaterial(x, materials)));
+			S = {X[0][i] - X[0][i-1], X[1][j] - X[1][j-1]};
+			volumes[i-1].push_back(Volume(x, findMaterial(x, materials), S, S[0] * S[1] * depth));
 		}
 		// volumes.push_back(volumes1D);
 	}
@@ -67,7 +68,7 @@ Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double
 
 	std::cout << "3-4" << std::endl;
 	std::cout << volumes[3][4].getX()[0] << std::endl;
-	
+
 	std::cout << "X" << std::endl;
 	printMatrix(X);
 
@@ -87,6 +88,6 @@ Material Mesh::findMaterial(std::vector<double> x, std::vector<Material> materia
 
 // TODO: Convert as many functions as possible to pass by reference & pointer returns!
 
-// std::vector< std::vector<Volume*> > Mesh::getVolumes() {
-
-// }
+std::vector< std::vector<Volume> >* Mesh::getVolumes() {
+	return &volumes;
+}

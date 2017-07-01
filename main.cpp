@@ -31,7 +31,21 @@ int main(int argc, char** argv) {
 	printMatrix(materials[0].getBoundaries());
 
 	Mesh mesh({10, 20}, materials, 10);
+	std::vector< std::vector<Volume> > *volumes = mesh.getVolumes();
+
+	std::cout << (*volumes)[3][4].getX()[0] << std::endl;
 	// mesh.printMatrix();
 
+	std::vector< std::vector <std::vector<double> > > T; // time x (M+1) x (N+1)
+	std::vector<double>size_type k;
+	while (t < tFinish) {
+		k++;
+
+		(*volumes).computeCoefficients(std::vector< std::vector<double> > Tprev);
+
+		t += tDelta;
+	}
+
+	
 	return 0;
 }

@@ -28,6 +28,6 @@ class Mesh {
 
 		// Methods
 		Material findMaterial(std::vector<double> x, std::vector<Material> materials);
-
+		std::vector< std::vector<Volume> >* getVolumes();
 		// regions
 };
