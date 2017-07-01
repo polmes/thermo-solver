@@ -11,20 +11,13 @@
 	#define INCLUDE_UTIL
 #endif
 
-Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials): N(_N) {
-	// Initialize MxN matrix
-	// volumes.resize(M, std::vector<Volume>(N)); // reserve if we only wanted to pre-allocate
+Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double _depth): N(_N), depth(_depth) {
 
 	std::vector< std::vector<double> > boundaries;
-	// Region region;
-	// divs.reserve(materials.size(), std::vector<unsigned int>(2));
 	for (auto material: materials) {
-
-		// regions.push_back(region(material));
 		for (auto boundary: material.getBoundaries()) {
 			boundaries.push_back(boundary);
 		}
-		
 	}
 
 	transpose(boundaries);
@@ -58,8 +51,42 @@ Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials): N(_N)
 		X[i].push_back(boundaries[i].back());
 	}
 
+	// Initialize MxN matrix
+	volumes.resize(N[0]); // reserve if we only wanted to pre-allocate
+	std::vector<double> x;
+	for (std::vector<double>::size_type i = 1; i < X[0].size(); i++) {
+		// std::vector<Volume> volumes1D;
+		for (std::vector<double>::size_type j = 1; j < X[1].size(); j++) {
+			x = {(X[0][i-1] + X[0][i]) / 2, (X[1][j-1] + X[1][j]) / 2};
+			volumes[i-1].push_back(Volume(x, findMaterial(x, materials)));
+		}
+		// volumes.push_back(volumes1D);
+	}
+
+	std::cout << "SIZE: " << volumes.size() << " " << volumes[0].size() << std::endl;
+
+	std::cout << "3-4" << std::endl;
+	std::cout << volumes[3][4].getX()[0] << std::endl;
+	
 	std::cout << "X" << std::endl;
 	printMatrix(X);
 
 	std::cout << X[1].size() << std::endl;
 }
+
+Material Mesh::findMaterial(std::vector<double> x, std::vector<Material> materials) {
+	std::vector< std::vector<double> > boundaries;
+	for (auto material: materials) {
+		boundaries = material.getBoundaries();
+		if ((boundaries[0][0] <= x[0] && boundaries[0][1] >= x[0]) && (boundaries[1][0] <= x[1] && boundaries[1][1] >= x[1])) {
+			return material;
+		}
+	}
+	// return nullptr;
+}
+
+// TODO: Convert as many functions as possible to pass by reference & pointer returns!
+
+// std::vector< std::vector<Volume*> > Mesh::getVolumes() {
+
+// }

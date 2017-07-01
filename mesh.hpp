@@ -9,26 +9,25 @@
 
 class Mesh {
 	private:
-		// const unsigned int M, N;
-		std::vector<unsigned int> N;
-		std::vector< std::vector<Volume> > volumes; // 2D
+		const std::vector<unsigned int> N; // MxN (2D)
+		std::vector< std::vector<Volume> > volumes;
 
 		// Global coordinates
 		std::vector< std::vector<double> > X; // boundaries
-		std::vector< std::vector<double> > x; // nodes
+		double depth;
 
 	protected:
 		// Sth else
 
 	public:
 		// Constructor
-		Mesh(std::vector<unsigned int> _N, std::vector<Material> materials);
+		Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double _depth);
 
 		// Destructor
 		// ~Mesh();
 
 		// Methods
-		// void printMatrix();
+		Material findMaterial(std::vector<double> x, std::vector<Material> materials);
 
 		// regions
 };

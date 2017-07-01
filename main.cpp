@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
 	printMatrix(materials[0].getBoundaries());
 
-	Mesh mesh({10, 20}, materials);
+	Mesh mesh({10, 20}, materials, 10);
 	// mesh.printMatrix();
 
 	return 0;
