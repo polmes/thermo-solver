@@ -2,8 +2,8 @@
 Heat Transfer simulator using a Finite Volumes solver for *Gas Dynamics*
 
 ## Instructions
-*First of all, make sure [g++-6](https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test) is installed and available in the `$PATH`*
-```
+First of all, make sure [`g++-6`](https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test) is installed and available in the `$PATH`. Then:
+```bash
 make # compile all them files
 ./thermo # run the simulator!
 ```
