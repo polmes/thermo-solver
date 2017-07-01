@@ -11,6 +11,6 @@ class Material {
 		Material(std::vector< std::vector<double> > _boundaries, double _rho, double _cp, double _lambda);
 
 		// Methods
-		std::vector< std::vector<double> > getBoundaries();
-		double getCp(), getRho(), getLambda(); // future: lambda as f(T)
+		std::vector< std::vector<double> > get_boundaries();
+		double get_cp(), get_rho(), get_lambda(); // future: lambda as f(T)
 };

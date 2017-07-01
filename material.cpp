@@ -9,18 +9,18 @@
 
 Material::Material(std::vector< std::vector<double> > _boundaries, double _rho, double _cp, double _lambda): boundaries(_boundaries), rho(_rho), cp(_cp), lambda(_lambda) {}
 
-std::vector< std::vector<double> > Material::getBoundaries() {
+std::vector< std::vector<double> > Material::get_boundaries() {
 	return boundaries;
 }
 
-double Material::getCp() {
+double Material::get_cp() {
 	return cp;
 }
 
-double Material::getRho() {
+double Material::get_rho() {
 	return rho;
 }
 
-double Material::getLambda() {
+double Material::get_lambda() {
 	return lambda;
 }

@@ -15,7 +15,7 @@ Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double
 
 	std::vector< std::vector<double> > boundaries;
 	for (auto material: materials) {
-		for (auto boundary: material.getBoundaries()) {
+		for (auto boundary: material.get_boundaries()) {
 			boundaries.push_back(boundary);
 		}
 	}
@@ -52,22 +52,24 @@ Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double
 	}
 
 	// Initialize MxN matrix
-	volumes.resize(N[0]); // reserve if we only wanted to pre-allocate
+	volumes.resize(N[0] + 2); // (M+2) x (N+2), reserve if we only wanted to pre-allocate
 	std::vector<double> x, S;
-	for (std::vector<double>::size_type i = 1; i < X[0].size(); i++) {
+	volumes[0].resize(N[1] + 2);
+	for (std::vector<double>::size_type i = 1; i < X[0].size(); i++) { // M
 		// std::vector<Volume> volumes1D;
-		for (std::vector<double>::size_type j = 1; j < X[1].size(); j++) {
+		volumes[i].resize(N[1] + 2);
+		for (std::vector<double>::size_type j = 1; j < X[1].size(); j++) { // N
 			x = {(X[0][i-1] + X[0][i]) / 2, (X[1][j-1] + X[1][j]) / 2};
-			S = {X[0][i] - X[0][i-1], X[1][j] - X[1][j-1]};
-			volumes[i-1].push_back(Volume(x, findMaterial(x, materials), S, S[0] * S[1] * depth));
+			volumes[i][j] = Volume(x, findMaterial(x, materials), {X[0][i], X[0][i-1], X[1][j], X[1][j-1]}, {i, j}, N);
 		}
 		// volumes.push_back(volumes1D);
 	}
+	volumes.back().resize(N[1] + 2);
 
 	std::cout << "SIZE: " << volumes.size() << " " << volumes[0].size() << std::endl;
 
 	std::cout << "3-4" << std::endl;
-	std::cout << volumes[3][4].getX()[0] << std::endl;
+	std::cout << volumes[3+1][4+1].get_X()[0] << std::endl;
 
 	std::cout << "X" << std::endl;
 	printMatrix(X);
@@ -78,7 +80,7 @@ Mesh::Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double
 Material Mesh::findMaterial(std::vector<double> x, std::vector<Material> materials) {
 	std::vector< std::vector<double> > boundaries;
 	for (auto material: materials) {
-		boundaries = material.getBoundaries();
+		boundaries = material.get_boundaries();
 		if ((boundaries[0][0] <= x[0] && boundaries[0][1] >= x[0]) && (boundaries[1][0] <= x[1] && boundaries[1][1] >= x[1])) {
 			return material;
 		}
