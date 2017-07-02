@@ -9,25 +9,18 @@
 
 class Mesh {
 	private:
-		const std::vector<unsigned int> N; // MxN (2D)
-		std::vector< std::vector<Volume> > volumes;
-
-		// Global coordinates
-		std::vector< std::vector<double> > X; // boundaries
-		double depth;
-
-	protected:
-		// Sth else
+		std::vector<unsigned int> N; // mesh size MxN (2D)
+		double depth; // 3rd dimension
+		std::vector< std::vector<double> > X; // global coordinates for mesh lines
+		std::vector< std::vector<Volume> > volumes; // themselves
 
 	public:
 		// Constructor
-		Mesh(std::vector<unsigned int> _N, std::vector<Material> materials, double _depth);
+		Mesh(const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const double &_depth);
 
-		// Destructor
-		// ~Mesh();
+		// Getters
+		std::vector< std::vector<Volume> >* get_volumes();
 
 		// Methods
-		Material findMaterial(std::vector<double> x, std::vector<Material> materials);
-		std::vector< std::vector<Volume> >* getVolumes();
-		// regions
+		const Material* findMaterial(const std::vector<double> &x, const std::vector<Material> &materials);
 };

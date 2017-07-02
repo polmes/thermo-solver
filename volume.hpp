@@ -9,22 +9,17 @@
 
 class Volume {
 	private:
-		// static const int M, N; // shared by all Volume instances
-		double aE, aW, aN, aS, aP, bP;
-		Material material;
-		bool isBoundary; // boundary = 'w' 'e' 'n' 's' 0
-		std::vector<double> x, S, d;
-		double V;
-		bool isUsed;
-
-	protected:
-		//
+		std::vector<double> x; // node coordinates
+		std::vector<double> S; // {vertical, horizontal} areas
+		std::vector<double> d; // {horizontal, vertical} distance to volume boundary
+		std::vector< std::vector<bool> > isBoundary; // {{W, E}, {S, N}}
+		double V; // volume volume
+		const Material *material;
+		double aE, aW, aN, aS, aP, bP; // coefficients
 
 	public:
 		// Constructor
-
-		Volume(std::vector<double> _x, Material _material, std::vector<double> _S, double _V, bool _isBoundary);
-		Volume();
+		Volume(const std::vector< std::vector<double> > &X, const double &depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N);
 
 		// Getters
 		double get_aE() const;
@@ -33,6 +28,8 @@ class Volume {
 		double get_aS() const;
 		double get_aP() const;
 		double get_bP() const;
+		std::vector<double> get_x() const;
+		const Material* get_material() const;
 
 		// Setters
 		void set_aE(const double &_aE);
@@ -41,9 +38,10 @@ class Volume {
 		void set_aS(const double &_aS);
 		void set_aP(const double &_aP);
 		void set_bP(const double &_bP);
+		void set_material(const Material *_material);
 
 		// Methods
-		Material get_material() const;
-		std::vector<double> get_X() const;
-		// void computeCoefficients(double &aE, double &aW, double &aN, double &aS, double &aP, double &bP);
+		void computeAllCoefficients(const std::vector< std::vector<Volume> > &neighbors, const double &beta, const double &tDelta, const double &t, const double &tPrev);
+		void computeTransientCoefficients();
+		std::vector< std::vector<double> > computeLambdas();
 };

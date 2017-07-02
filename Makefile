@@ -21,4 +21,4 @@ obj/material.o: material.cpp material.hpp headers.hpp
 	$(CC) $(CFLAGS) material.cpp -o obj/material.o $(LIBS)
 
 clean:
-	rm obj/*
+	rm thermo obj/*

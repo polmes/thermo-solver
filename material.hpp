@@ -8,9 +8,11 @@ class Material {
 
 	public:
 		// Constructor
-		Material(std::vector< std::vector<double> > _boundaries, double _rho, double _cp, double _lambda);
+		Material(const std::vector< std::vector<double> > &_boundaries, const double &_rho, const double &_cp, const double &_lambda);
 
 		// Methods
-		std::vector< std::vector<double> > get_boundaries();
-		double get_cp(), get_rho(), get_lambda(); // future: lambda as f(T)
+		std::vector< std::vector<double> > get_boundaries() const;
+		double get_cp() const;
+		double get_rho() const;
+		double get_lambda() const; // future: lambda as f(T)
 };
