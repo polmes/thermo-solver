@@ -7,49 +7,34 @@
 	#define INCLUDE_CONDITION
 #endif
 
-ConditionType Condition::get_conditionType() const {
-	return conditionType;
-}
-
-// Conduction::Conduction() {
-// 	condition = CONDUCTION;
-// }
-
-Convection::Convection(const double &_alpha, const double &_Tg) {
-	condition = CONVECTION;
-	alpha = _alpha;
-	Tg = _Tg;
-}
-
-double Convection::get_alpha() const {
-	return alpha;
-}
-
-double Convection::get_Tg() const {
-	return Tg;
-}
-
-Flow::Flow(const double &_Qflow) {
-	condition = FLOW;
-	Qflow = _Qflow;
-}
-
-double Flow::get_Qflow() const {
-	return Qflow;
-}
-
-Isotherm::Isotherm(const double &_a) {
-	condition = ISOTHERM;
+Condition::Condition(const ConditionType &_conditionType, const double &_a) {
+	conditionType = _conditionType;
 	a = _a;
-	b = 0;
+	b = 0.0;
 }
 
-Isotherm::Isotherm(const double &_a, const double &_b) {
-	condition = ISOTHERM;
+Condition::Condition(const ConditionType &_conditionType, const double &_a, const double &_b) {
+	conditionType = _conditionType;
 	a = _a;
 	b = _b;
 }
 
-double Isotherm::get_T(const double &t) const {
-	return a + b*t;
+double Condition::get_alpha() const {
+	if (conditionType == CONVECTION) return a;
+	else throw std::logic_error("ERROR: Wrong ConditionType.");
+}
+
+double Condition::get_Tg() const {
+	if (conditionType == CONVECTION) return b;
+	else throw std::logic_error("ERROR: Wrong ConditionType.");
+}
+
+double Condition::get_Qflow() const {
+	if (conditionType == FLOW) return a;
+	else throw std::logic_error("ERROR: Wrong ConditionType.");
+}
+
+double Condition::get_T(const double &t) const {
+	if (conditionType == ISOTHERM) return a + b*t;
+	else throw std::logic_error("ERROR: Wrong ConditionType.");
 }
