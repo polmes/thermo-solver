@@ -6,6 +6,10 @@
 	#include "volume.hpp"
 	#define INCLUDE_VOLUME
 #endif
+#ifndef INCLUDE_CONDITION
+	#include "condition.hpp"
+	#define INCLUDE_CONDITION
+#endif
 
 class Mesh {
 	private:
@@ -13,10 +17,11 @@ class Mesh {
 		double depth; // 3rd dimension
 		std::vector< std::vector<double> > X; // global coordinates for mesh lines
 		std::vector< std::vector<Volume> > volumes; // themselves
+		std::vector< std::vector<Condition> > conditions; // boundary conditions
 
 	public:
-		// Constructor
-		Mesh(const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const double &_depth);
+		// Constructors
+		Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const std::vector< std::vector<Condition> > &_conditions);
 
 		// Getters
 		std::vector< std::vector<Volume> >* get_volumes();

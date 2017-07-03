@@ -1,9 +1,9 @@
 // Standard libraries
 #include "headers.hpp"
 
-class Condition {
-	const enum ConditionType {CONVECTION, ISOTHERM, FLOW};
+enum ConditionType {CONVECTION, ISOTHERM, FLOW};
 
+class Condition {
 	private:
 		ConditionType conditionType;
 		double a, b; // convection: a = alpha, b = Tg; isotherm: T = a + b*t; flow: Qflow = a

@@ -23,32 +23,28 @@ Volume::Volume(const std::vector< std::vector<double> > &X, const double &depth,
 		if (ij[i] == 0) {
 			conditions[i][0] = &_conditions[i][0];
 			isBoundary = true;
-		} else if (ij[i] == N[i]) {
+		} else if (ij[i] == N[i]-1) {
 			conditions[i][1] = &_conditions[i][1];
 			isBoundary = true;
 		}
 	}
 
 	// Initialize coefficients
-	neighbors.resize(N.size(), std::vector<const Volume*>(N.size(), nullptr));
-	std::cout << neighbors.size() << " " << neighbors[0].size() << std::endl;
-	std::cout << neighbors[0][0] << " " << neighbors[0][1] << std::endl;
-
 	aP = bP = 0.0;
 	a = {{0.0, 0.0}, {0.0, 0.0}};
 }
 
-Volume::~Volume() {
-	std::vector<const Condition*>::size_type size, sizes;
-	sizes = conditions.size();
-	for (std::vector<const Condition*>::size_type i = 0; i < sizes; i++) {
-		size = conditions[i].size();
-		for (std::vector<const Condition*>::size_type j = 0; j < size; j++) {
-			delete conditions[i][j];
-			delete neighbors[i][j];
-		}
-	}
-}
+// Volume::~Volume() {
+// 	std::vector<const Condition*>::size_type size, sizes;
+// 	sizes = conditions.size();
+// 	for (std::vector<const Condition*>::size_type i = 0; i < sizes; i++) {
+// 		size = conditions[i].size();
+// 		for (std::vector<const Condition*>::size_type j = 0; j < size; j++) {
+// 			delete conditions[i][j];
+// 			delete neighbors[i][j];
+// 		}
+// 	}
+// }
 
 std::vector<double> Volume::get_x() const {
 	return x;
@@ -71,50 +67,33 @@ void Volume::set_material(const Material *_material) {
 }
 
 void Volume::set_neighbors(const std::vector<std::vector<double>::size_type> &ij, const std::vector< std::vector<Volume> > &volumes) {
-	std::cout << "SETTING UP" << std::endl;
-	std::cout << conditions.size() << std::endl;
-	neighbors.resize(2);
-	std::cout << neighbors.size() << std::endl;
-	neighbors[0].resize(2);
-	std::cout << neighbors[0].size() << std::endl;
 	// neighbors.resize(conditions.size());
-
-	// std::cout << "AGAIN" << std::endl;
-	// std::cout << &(volumes[0][0]) << std::endl;
-	// // neighbors.push_back()
-	// std::cout << "0SZ: " << neighbors[0].size() << std::endl;
-	// std::vector<const Volume*> test;
-	// neighbors.resize(neighbors.size(), std::vector<const Volume*>(neighbors.size(), nullptr));
-
-	// test.push_back(&(volumes[0][0]));
-	// std::cout << "test" << std::endl;
-	// neighbors.push_back(test);
-	// std::cout << "NOPE" << std::endl;
-
 	// for (std::vector<const Volume*>::size_type i = 0; i < neighbors.size(); i++) {
-	// 	// neighbors[i].resize(conditions[i].size());
-	// 	std::vector<const Volume*> neighbors1D;
+	// 	neighbors[i].resize(conditions[i].size());
 	// 	for (std::vector<const Volume*>::size_type j = 0; j < neighbors[i].size(); j++) {
-	// 		std::cout << "here" << std::endl;
-	// 		if (conditions[i][j] == NULL) {
-	// 			std::cout << "there" << std::endl;
-	// 			if (i == 0) {
-	// 				std::cout << "tthere" << std::endl;
-	// 				if (j == 0) neighbors1D.emplace_back(&(volumes[ij[0]-1][ij[1]]));
-	// 				else neighbors1D.emplace_back(&(volumes[ij[0]+1][ij[1]])); // j == 1
-	// 			} else { // i == 1
-	// 				if (j == 0) neighbors1D.emplace_back(&(volumes[ij[0]][ij[1]-1]));
-	// 				else neighbors1D.emplace_back(&(volumes[ij[0]][ij[1]+1])); // j == 1
-	// 			}
-	// 		} else {
-	// 			std::cout << "also" << std::endl;
-	// 			neighbors1D.push_back(nullptr);
-	// 		}
+	// 		if (conditions[i][j] == NULL) neighbors[i][j] = &(volumes[i][j]);
+	// 		else neighbors[i][j] = nullptr;
+	// 		std::cout << "neighbors: " << neighbors[i][j] << std::endl;
 	// 	}
-	// 	std::cout << "final push" << std::endl;
-	// 	neighbors.push_back(neighbors1D);
-	// 	std::cout << "final push" << std::endl;
 	// }
+
+	neighbors.resize(conditions.size());
+	for (std::vector<const Volume*>::size_type i = 0; i < neighbors.size(); i++) {
+		neighbors[i].resize(conditions[i].size());
+		for (std::vector<const Volume*>::size_type j = 0; j < neighbors[i].size(); j++) {
+			if (conditions[i][j] == NULL) {
+				if (i == 0) {
+					if (j == 0) neighbors[i][j] = &(volumes[ij[0]-1][ij[1]]);
+					else neighbors[i][j] = &(volumes[ij[0]+1][ij[1]]); // j == 1
+				} else { // i == 1
+					if (j == 0) neighbors[i][j] = &(volumes[ij[0]][ij[1]-1]);
+					else neighbors[i][j] = &(volumes[ij[0]][ij[1]+1]); // j == 1
+				}
+			} else neighbors[i][j] = nullptr;
+		}
+	}
+	std::cout << "NEIGHBORS" << std::endl;
+	printMatrix(neighbors);
 }
 
 void Volume::computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors) {
@@ -139,7 +118,6 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 	// Boundary volumes
 	else {
 		std::cout << "OUTER" << std::endl;
-		std::cout << "CONDITIONS SIZE: " << conditions.size() << std::endl;
 
 		// Isotherm
 		bP = 0.0;
@@ -147,7 +125,6 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 		for (std::vector<Condition*>::size_type i = 0; i < conditions.size(); i++) {
 			for (std::vector<Condition*>::size_type j = 0; j < conditions[i].size(); j++) {
 				if (conditions[i][j] != NULL && conditions[i][j]->get_conditionType() == ISOTHERM) {
-					std::cout << "made it" << std::endl;
 					bP += conditions[i][j]->get_T(t);
 					k++;
 				}

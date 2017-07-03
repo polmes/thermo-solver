@@ -4,15 +4,16 @@
 class Material {
 	private:
 		std::vector< std::vector<double> > boundaries;
-		double rho, cp, lambda;
+		double rho, cp, lambda, qv; // properties
 
 	public:
-		// Constructor
-		Material(const std::vector< std::vector<double> > &_boundaries, const double &_rho, const double &_cp, const double &_lambda);
+		// Constructors
+		Material(const std::vector< std::vector<double> > &_boundaries, const double &_rho, const double &_cp, const double &_lambda, const double &_qv);
 
-		// Methods
+		// Getters
 		std::vector< std::vector<double> > get_boundaries() const;
 		double get_cp() const;
 		double get_rho() const;
-		double get_lambda() const; // future: lambda as f(T)
+		double get_lambda() const; // could have lambda as f(T)
+		double get_qv() const; // could have qv as f(t) 
 };

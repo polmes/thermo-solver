@@ -11,9 +11,10 @@
 	#define INCLUDE_UTIL
 #endif
 
-Mesh::Mesh(const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const double &_depth): N(_N), depth(_depth) {
-	// N = _N;
-	// depth = _depth;
+Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const std::vector< std::vector<Condition> > &_conditions) {
+	N = _N;
+	depth = _depth;
+	conditions = _conditions;
 
 	// Get list of boundaries
 	std::vector< std::vector<double> > boundaries;
@@ -30,8 +31,8 @@ Mesh::Mesh(const std::vector<unsigned int> &_N, const std::vector<Material> &mat
 		boundaries[i].erase(std::unique(boundaries[i].begin(), boundaries[i].end()), boundaries[i].end());
 	}
 
-	std::cout << "BOUNDARIES" << std::endl;
-	printMatrix(boundaries);
+	// std::cout << "BOUNDARIES" << std::endl;
+	// printMatrix(boundaries);
 
 	// Get number of divisions
 	std::vector< std::vector<unsigned int> > divs(boundaries.size());
@@ -41,8 +42,8 @@ Mesh::Mesh(const std::vector<unsigned int> &_N, const std::vector<Material> &mat
 		}
 	}
 
-	std::cout << "DIVS" << std::endl;
-	printMatrix(divs);
+	// std::cout << "DIVS" << std::endl;
+	// printMatrix(divs);
 
 	// Get mesh lines
 	X.resize(divs.size());
@@ -56,36 +57,28 @@ Mesh::Mesh(const std::vector<unsigned int> &_N, const std::vector<Material> &mat
 		X[i].push_back(boundaries[i].back()); // add missing last element
 	}
 
+	// std::cout << "X" << std::endl;
+	// printMatrix(X);
+
 	// Initialize MxN matrix of volumes
 	volumes.resize(N[0]); // use reserve if we only wanted to pre-allocate
 	for (std::vector<double>::size_type i = 0; i < N[0]; i++) { // M
-		// volumes[i].resize(N[1]);
 		for (std::vector<double>::size_type j = 0; j < N[1]; j++) { // N
-			volumes[i].push_back(Volume({{X[0][i], X[0][i+1]}, {X[1][j], X[1][j+1]}}, depth, {i, j}, N));
+			volumes[i].push_back(Volume({{X[0][i], X[0][i+1]}, {X[1][j], X[1][j+1]}}, depth, {i, j}, N, conditions));
 			volumes[i][j].set_material(this->findMaterial(volumes[i][j].get_x(), materials));
 		}
 	}
-
-	std::cout << "SIZE: " << volumes.size() << " " << volumes[0].size() << std::endl;
-
-	std::cout << "3-4" << std::endl;
-	std::cout << volumes[3][4].get_x()[0] << std::endl;
-
-	std::cout << "X" << std::endl;
-	printMatrix(X);
-
-	std::cout << X[1].size() << std::endl;
 }
 
 const Material* Mesh::findMaterial(const std::vector<double> &x, const std::vector<Material> &materials) {
 	std::vector< std::vector<double> > boundaries;
 	for (const auto& material: materials) {
 		boundaries = material.get_boundaries();
-		if ((boundaries[0][0] <= x[0] && boundaries[0][1] >= x[0]) && (boundaries[1][0] <= x[1] && boundaries[1][1] >= x[1])) {
+		if ((boundaries[0][0] <= x[0] && boundaries[1][0] >= x[0]) && (boundaries[0][1] <= x[1] && boundaries[1][1] >= x[1])) {
 			return &material;
 		}
 	}
-	return nullptr;
+	return nullptr; // error handling
 }
 
 std::vector< std::vector<Volume> >* Mesh::get_volumes() {

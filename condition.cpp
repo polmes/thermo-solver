@@ -19,6 +19,10 @@ Condition::Condition(const ConditionType &_conditionType, const double &_a, cons
 	b = _b;
 }
 
+ConditionType Condition::get_conditionType() const {
+	return conditionType;
+}
+
 double Condition::get_alpha() const {
 	if (conditionType == CONVECTION) return a;
 	else throw std::logic_error("ERROR: Wrong ConditionType.");

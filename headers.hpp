@@ -27,6 +27,10 @@
 	#include "material.hpp"
 	#define INCLUDE_MATERIAL
 #endif
+#ifndef INCLUDE_CONDITION
+	#include "condition.hpp"
+	#define INCLUDE_CONDITION
+#endif
 #ifndef INCLUDE_UTIL
 	#include "util.hpp"
 	#define INCLUDE_UTIL

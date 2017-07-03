@@ -17,20 +17,19 @@ class Volume {
 		std::vector<double> S; // {vertical, horizontal} areas
 		std::vector<double> d; // {horizontal, vertical} distance to volume boundary
 		std::vector< std::vector<const Condition*> > conditions; // {{W, E}, {S, N}}
-		bool isBoundary; // is a boundary volume?
+		bool isBoundary; // is this a boundary (outer) volume?
 		double V; // volume volume
 		const Material *material; // material properties: rho, cp, lambda, qv
 		double aP, bP; // coefficients
 		std::vector< std::vector<double> > a; // more coefficients: {{aW, aE}, {aS, aN}}
-		// std::vector< std::vector<const Volume*> > neighbors; // surrounding volumes
+		std::vector< std::vector<const Volume*> > neighbors; // surrounding volumes
 
 	public:
-		std::vector< std::vector<const Volume*> > neighbors; // surrounding volumes
 		// Constructors
 		Volume(const std::vector< std::vector<double> > &X, const double &depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions);
 
 		// Destructors
-		~Volume(); // must delete pointers
+		// ~Volume(); // must delete pointers
 
 		// Getters
 		std::vector<double> get_x() const;
