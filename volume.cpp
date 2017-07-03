@@ -67,16 +67,6 @@ void Volume::set_material(const Material *_material) {
 }
 
 void Volume::set_neighbors(const std::vector<std::vector<double>::size_type> &ij, const std::vector< std::vector<Volume> > &volumes) {
-	// neighbors.resize(conditions.size());
-	// for (std::vector<const Volume*>::size_type i = 0; i < neighbors.size(); i++) {
-	// 	neighbors[i].resize(conditions[i].size());
-	// 	for (std::vector<const Volume*>::size_type j = 0; j < neighbors[i].size(); j++) {
-	// 		if (conditions[i][j] == NULL) neighbors[i][j] = &(volumes[i][j]);
-	// 		else neighbors[i][j] = nullptr;
-	// 		std::cout << "neighbors: " << neighbors[i][j] << std::endl;
-	// 	}
-	// }
-
 	neighbors.resize(conditions.size());
 	for (std::vector<const Volume*>::size_type i = 0; i < neighbors.size(); i++) {
 		neighbors[i].resize(conditions[i].size());

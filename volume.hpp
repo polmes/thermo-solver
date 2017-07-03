@@ -29,7 +29,7 @@ class Volume {
 		Volume(const std::vector< std::vector<double> > &X, const double &depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions);
 
 		// Destructors
-		// ~Volume(); // must delete pointers
+		// ~Volume(); // should delete dangling pointers
 
 		// Getters
 		std::vector<double> get_x() const;
