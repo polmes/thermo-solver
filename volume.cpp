@@ -88,7 +88,6 @@ void Volume::set_neighbors(const std::vector<std::vector<double>::size_type> &ij
 }
 
 void Volume::computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors) {
-
 	// Inner volumes
 	if (!isBoundary) {
 		// std::cout << "INNER" << std::endl;
@@ -157,9 +156,9 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 		}
 	}
 
-	std::cout << "aP = " << aP << std::endl;
-	std::cout << "bP = " << bP << std::endl;
-	printMatrix(a);
+	// std::cout << "aP = " << aP << std::endl;
+	// std::cout << "bP = " << bP << std::endl;
+	// printMatrix(a);
 }
 
 double Volume::computeLambda(const std::vector<Volume>::size_type &i, const Volume &neighbor) {

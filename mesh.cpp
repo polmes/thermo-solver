@@ -57,8 +57,8 @@ Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std:
 		X[i].push_back(boundaries[i].back()); // add missing last element
 	}
 
-	std::cout << "X" << std::endl;
-	printMatrix(X);
+	// std::cout << "X" << std::endl;
+	// printMatrix(X);
 
 	// Initialize MxN matrix of volumes
 	volumes.resize(N[0]); // use reserve if we only wanted to pre-allocate
