@@ -13,6 +13,7 @@
 
 class Volume {
 	private:
+		const double *depth;
 		std::vector<double> x; // node coordinates
 		std::vector<double> S; // {vertical, horizontal} areas
 		std::vector<double> d; // {horizontal, vertical} distance to volume boundary
@@ -26,12 +27,13 @@ class Volume {
 
 	public:
 		// Constructors
-		Volume(const std::vector< std::vector<double> > &X, const double &depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions);
+		Volume(const std::vector< std::vector<double> > &X, const double &_depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions);
 
 		// Destructors
 		// ~Volume(); // should delete dangling pointers
 
 		// Getters
+		double get_depth() const;
 		std::vector<double> get_x() const;
 		std::vector<double> get_d() const;
 		double get_V() const;

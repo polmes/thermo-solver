@@ -11,11 +11,12 @@
 	#define INCLUDE_UTIL
 #endif
 
-Volume::Volume(const std::vector< std::vector<double> > &X, const double &depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions) {
+Volume::Volume(const std::vector< std::vector<double> > &X, const double &_depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions) {
+	depth = &_depth;
 	x = {(X[0][0] + X[0][1]) / 2, (X[1][0] + X[1][1]) / 2};
 	d = {x[0] - X[0][0], x[1] - X[1][0]};
-	S = {2 * d[1] * depth, 2 * d[0] * depth};
-	V = (2 * d[0]) * (2 * d[1]) * depth;
+	S = {2 * d[1] * (*depth), 2 * d[0] * (*depth)};
+	V = (2 * d[0]) * (2 * d[1]) * (*depth);
 	
 	isBoundary = false;
 	conditions.resize(N.size(), std::vector<const Condition*>(N.size(), nullptr)); // {{W, E}, {S, N}}
@@ -45,6 +46,10 @@ Volume::Volume(const std::vector< std::vector<double> > &X, const double &depth,
 // 		}
 // 	}
 // }
+
+double Volume::get_depth() const {
+	return (*depth);
+}
 
 std::vector<double> Volume::get_x() const {
 	return x;
@@ -148,7 +153,9 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 							bP += beta * conditions[i][j]->get_alpha() * S[i] * conditions[i][j]->get_Tg() + (1 - beta) * conditions[i][j]->get_alpha() * (conditions[i][j]->get_Tg() - Tprev) * S[i];
 						}
 						else if (conditions[i][j]->get_conditionType() == FLOW) {
-							bP += conditions[i][j]->get_Qflow() * this->get_d()[!i] * 2; // beta * Qflow + (1 - beta) * Qflow
+							// beta * Qflow + (1 - beta) * Qflow
+							// bP += conditions[i][j]->get_Qflow() * this->get_d()[!i] * 2;
+							bP += conditions[i][j]->get_Qflow() * this->get_depth();
 						}
 					}
 				}
