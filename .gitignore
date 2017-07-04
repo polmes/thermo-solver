@@ -3,7 +3,6 @@ thermo
 
 # Output files
 output.*
-verification.*
 
 # Object directory
 obj/
