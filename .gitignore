@@ -1,6 +1,9 @@
 # Executable
 thermo
 
+# Output files
+output.*
+
 # Object directory
 obj/
 
