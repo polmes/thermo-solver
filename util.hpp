@@ -48,3 +48,18 @@ void transpose(std::vector< std::vector<T> > &input) {
 	}
 	input = matrix;
 }
+
+template <typename T>
+bool checkConvergence(std::vector< std::vector<T> > &A, std::vector< std::vector<T> > &B, const double &delta) {
+	std::cout << "CONVERGENCE with " << delta << std::endl;
+	for (typename std::vector<T>::size_type i = 0; i < A.size(); i++) {
+		for (typename std::vector<T>::size_type j = 0; j < A[0].size(); j++) {
+			std::cout << abs(A[i][j] - B[i][j]) << std::endl;
+			if (abs(A[i][j] - B[i][j]) > delta) {
+				std::cout << "HERE: " << i << " " << j << std::endl;
+				return false;
+			}
+		}
+	}
+	return true;
+}

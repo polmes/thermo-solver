@@ -16,7 +16,7 @@ class Mesh {
 		std::vector<unsigned int> N; // mesh size MxN (2D)
 		double depth; // 3rd dimension
 		std::vector< std::vector<double> > X; // global coordinates for mesh lines
-		std::vector< std::vector<Volume> > volumes; // themselves
+		std::vector< std::vector<Volume> > volumes; // themselves: N[0]xN[1]
 		std::vector< std::vector<Condition> > conditions; // boundary conditions
 
 	public:
@@ -28,4 +28,5 @@ class Mesh {
 
 		// Methods
 		const Material* findMaterial(const std::vector<double> &x, const std::vector<Material> &materials);
+		void solve(std::vector< std::vector<double> > &T);
 };

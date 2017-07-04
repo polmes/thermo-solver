@@ -36,6 +36,12 @@ class Volume {
 		std::vector<double> get_d() const;
 		double get_V() const;
 		const Material* get_material() const;
+		double get_aP() const;
+		double get_aW() const;
+		double get_aE() const;
+		double get_aS() const;
+		double get_aN() const;
+		double get_bP() const;
 
 		// Setters
 		void set_material(const Material *_material);

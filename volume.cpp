@@ -82,18 +82,19 @@ void Volume::set_neighbors(const std::vector<std::vector<double>::size_type> &ij
 			} else neighbors[i][j] = nullptr;
 		}
 	}
-	std::cout << "NEIGHBORS" << std::endl;
-	printMatrix(neighbors);
+	
+	// std::cout << "NEIGHBORS" << std::endl;
+	// printMatrix(neighbors);
 }
 
 void Volume::computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors) {
 
 	// Inner volumes
 	if (!isBoundary) {
-		std::cout << "INNER" << std::endl;
+		// std::cout << "INNER" << std::endl;
 
 		aP = this->get_material()->get_rho() * this->get_material()->get_cp() * this->get_V() / tDelta;
-		bP = this->get_material()->get_rho() * this->get_material()->get_cp() * this->get_V() * Tprev / tDelta + beta * this->get_material()->get_qv() * this->get_V();
+		bP = aP * Tprev + beta * this->get_material()->get_qv() * this->get_V();
 
 		for (std::vector<Volume>::size_type i = 0; i < neighbors.size(); i++) {
 			for (std::vector<Volume>::size_type j = 0; j < neighbors[i].size(); j++) {
@@ -107,7 +108,7 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 
 	// Boundary volumes
 	else {
-		std::cout << "OUTER" << std::endl;
+		// std::cout << "OUTER" << std::endl;
 
 		// Isotherm
 		bP = 0.0;
@@ -129,7 +130,7 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 		// Convection & Qflow
 		else { // k == 0
 			aP = this->get_material()->get_rho() * this->get_material()->get_cp() * this->get_V() / tDelta;
-			bP = this->get_material()->get_rho() * this->get_material()->get_cp() * this->get_V() * Tprev / tDelta + beta * this->get_material()->get_qv() * this->get_V();
+			bP = aP * Tprev + beta * this->get_material()->get_qv() * this->get_V();
 
 			for (std::vector<Volume>::size_type i = 0; i < conditions.size(); i++) { // neighbors.size()
 				for (std::vector<Volume>::size_type j = 0; j < conditions[i].size(); j++) { // neighbors[i].size()		// Inner side
@@ -145,7 +146,7 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 						a[i][j] = 0;
 						if (conditions[i][j]->get_conditionType() == CONVECTION) {
 							aP += beta * conditions[i][j]->get_alpha() * S[i];
-							bP += aP * conditions[i][j]->get_Tg() + (1 - beta) * conditions[i][j]->get_alpha() * (conditions[i][j]->get_Tg() - Tprev) * S[i];
+							bP += beta * conditions[i][j]->get_alpha() * S[i] * conditions[i][j]->get_Tg() + (1 - beta) * conditions[i][j]->get_alpha() * (conditions[i][j]->get_Tg() - Tprev) * S[i];
 						}
 						else if (conditions[i][j]->get_conditionType() == FLOW) {
 							bP += conditions[i][j]->get_Qflow() * this->get_d()[!i] * 2; // beta * Qflow + (1 - beta) * Qflow
@@ -163,4 +164,28 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 
 double Volume::computeLambda(const std::vector<Volume>::size_type &i, const Volume &neighbor) {
 	return (this->get_d()[i] + neighbor.get_d()[i]) / (this->get_d()[i]/this->get_material()->get_lambda() + neighbor.get_d()[i]/neighbor.get_material()->get_lambda());
+}
+
+double Volume::get_aP() const {
+	return aP;
+}
+
+double Volume::get_aW() const {
+	return a[0][0];
+}
+
+double Volume::get_aE() const {
+	return a[0][1];
+}
+
+double Volume::get_aS() const {
+	return a[1][0];
+}
+
+double Volume::get_aN() const {
+	return a[1][1];
+}
+
+double Volume::get_bP() const {
+	return bP;
 }

@@ -57,8 +57,8 @@ Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std:
 		X[i].push_back(boundaries[i].back()); // add missing last element
 	}
 
-	// std::cout << "X" << std::endl;
-	// printMatrix(X);
+	std::cout << "X" << std::endl;
+	printMatrix(X);
 
 	// Initialize MxN matrix of volumes
 	volumes.resize(N[0]); // use reserve if we only wanted to pre-allocate
@@ -84,3 +84,53 @@ const Material* Mesh::findMaterial(const std::vector<double> &x, const std::vect
 std::vector< std::vector<Volume> >* Mesh::get_volumes() {
 	return &volumes;
 }
+
+void Mesh::solve(std::vector< std::vector<double> > &T) {
+	// std::cout << "Starting threads..." << std::endl;
+
+	// // aP*T[i] = aW*T[i-1] + aE*T[i+1] + bP[i]
+	// std::thread horizontal(this->tdma, arg);
+
+	// // aP*T[i] = aS*T[i-1] + aN*T[i+1] + bP[i]
+	// std::thread vertical(this->tdma, arg);
+
+	// // Wait for threads to finish
+	// horizontal.join();
+	// vertical.join();
+
+	// std::cout << "... and we're done!" << std::endl;
+
+	// Standard solver
+	for (std::vector< std::vector<double> >::size_type i = 0; i < volumes.size(); i++) {
+		for (std::vector< std::vector<double> >::size_type j = 0; j < volumes[i].size(); j++) {
+			// aP*T[i][j] = aW*T[i-1][j] + aE*T[i+1][j] + aS*T[i][j-1] + aN*T[i][j+1] + bP
+			T[i+1][j+1] = (volumes[i][j].get_aW() * T[i][j+1] + volumes[i][j].get_aE() * T[i+2][j+1] + volumes[i][j].get_aS() * T[i+1][j] + volumes[i][j].get_aN() * T[i+1][j+2] + volumes[i][j].get_bP()) / volumes[i][j].get_aP();
+		}
+	}
+}
+
+// Mesh::lineByLine() {
+// 	for (std::vector<Volume>::size_type i = 0; i < ; i++) {
+// 		volumes[i][j].getCoefficients();
+// 	}
+// }
+
+// std::vector<double> T Mesh::tdma() {
+// 	// aP*T[i] = aW*T[i-1] + aE*T[i+1] + bP[i]
+// 	double aP, aW, aE, bP;
+// 	std::vector<double> T, P, R;
+// 	T.resize(N+2, 0.0);
+// 	P = R = T;
+// 	for (std::vector<double>::size_type i = 0; i < N; i++) {
+// 		aP = volumes[i][j].get_aP()
+// 		aW = volumes[i][j].get_aW();
+// 		aE = volumes[i][j].get_aE();
+// 		bP = volumes[i][j].get_bP();
+
+// 		P[i+1] = aE / (aP - aW*P[i]);
+// 		R[i+1] = (bP + aW*R[i]) / (aP - aW*P[i]);
+// 	}
+// 	for (std::vector<double>::size_type i = N; i > 0; i--) {
+// 		T[i] = P[i]*T[i+1] + R[i];
+// 	}
+// }
