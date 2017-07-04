@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	std::cout << "Setting up...";
 
 	// Boundary conditions
-	std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 9.0, 306.15), Condition(ISOTHERM, 281.15, 0.005)}, {Condition(ISOTHERM, 296.15), Condition(FLOW, 60.0)}};
+	std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 9.0, 306.15), Condition(ISOTHERM, 281.15, 0.005)}, {Condition(ISOTHERM, 296.15), Condition(FLOW, -60.0)}};
 
 	// Material properties
 	std::vector<Material> materials;
@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 	materials.push_back(Material({{0.5, 0.7}, {1.1, 0.8}}, 2500.0, 930.0, 140.0, 0.0));
 
 	// Mesh discretization
-	std::vector<unsigned int> N = {10, 10};
+	std::vector<unsigned int> N = {110, 80};
 	Mesh mesh(1000.0, N, materials, conditions);
 	std::vector< std::vector<Volume> > *volumes = mesh.get_volumes();
 
