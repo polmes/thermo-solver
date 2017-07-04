@@ -51,8 +51,9 @@ Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std:
 	for (std::vector<int>::size_type i = 0; i < divs.size(); i++) {
 		for (std::vector<int>::size_type j = 0; j < divs[i].size(); j++) {
 			range = getRange(boundaries[i][j], boundaries[i][j+1], divs[i][j]);
+			// std::cout << "RANGE" << std::endl;
 			// printVector(range);
-			X[i].insert(X[i].end(), range.begin(), range.end()-1);
+			X[i].insert(X[i].end(), range.begin(), range.end());
 		}
 		X[i].push_back(boundaries[i].back()); // add missing last element
 	}

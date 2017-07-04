@@ -10,7 +10,7 @@ std::vector<T> getRange(T a, T b, int n) {
 
 	double step = (b - a) / n;
 
-	while (a <= b) {
+	while (a < (b - step/2)) {
 		range.push_back(a);
 		a += step;
 	}

@@ -137,7 +137,8 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 			bP = aP * Tprev + beta * this->get_material()->get_qv() * this->get_V();
 
 			for (std::vector<Volume>::size_type i = 0; i < conditions.size(); i++) { // neighbors.size()
-				for (std::vector<Volume>::size_type j = 0; j < conditions[i].size(); j++) { // neighbors[i].size()		// Inner side
+				for (std::vector<Volume>::size_type j = 0; j < conditions[i].size(); j++) { // neighbors[i].size()
+					// Inner side
 					if (conditions[i][j] == NULL) {
 						a[i][j] = this->computeLambda(i, *neighbors[i][j]) * S[i] / (this->get_d()[i] + neighbors[i][j]->get_d()[i]);
 						bP += (1 - beta) * a[i][j] * (Tneighbors[i][j] - Tprev);
@@ -154,8 +155,7 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 						}
 						else if (conditions[i][j]->get_conditionType() == FLOW) {
 							// beta * Qflow + (1 - beta) * Qflow
-							// bP += conditions[i][j]->get_Qflow() * this->get_d()[!i] * 2;
-							bP += conditions[i][j]->get_Qflow() * this->get_depth();
+							bP += conditions[i][j]->get_Qflow() * S[i];
 						}
 					}
 				}
