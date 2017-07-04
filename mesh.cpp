@@ -86,6 +86,16 @@ std::vector< std::vector<Volume> >* Mesh::get_volumes() {
 }
 
 void Mesh::solve(std::vector< std::vector<double> > &T) {
+	// Standard solver
+	for (std::vector< std::vector<double> >::size_type i = 0; i < volumes.size(); i++) {
+		for (std::vector< std::vector<double> >::size_type j = 0; j < volumes[i].size(); j++) {
+			// aP*T[i][j] = aW*T[i-1][j] + aE*T[i+1][j] + aS*T[i][j-1] + aN*T[i][j+1] + bP
+			T[i+1][j+1] = (volumes[i][j].get_aW() * T[i][j+1] + volumes[i][j].get_aE() * T[i+2][j+1] + volumes[i][j].get_aS() * T[i+1][j] + volumes[i][j].get_aN() * T[i+1][j+2] + volumes[i][j].get_bP()) / volumes[i][j].get_aP();
+		}
+	}
+
+	/* Parallel TDMA solver */
+	
 	// std::cout << "Starting threads..." << std::endl;
 
 	// // aP*T[i] = aW*T[i-1] + aE*T[i+1] + bP[i]
@@ -99,21 +109,7 @@ void Mesh::solve(std::vector< std::vector<double> > &T) {
 	// vertical.join();
 
 	// std::cout << "... and we're done!" << std::endl;
-
-	// Standard solver
-	for (std::vector< std::vector<double> >::size_type i = 0; i < volumes.size(); i++) {
-		for (std::vector< std::vector<double> >::size_type j = 0; j < volumes[i].size(); j++) {
-			// aP*T[i][j] = aW*T[i-1][j] + aE*T[i+1][j] + aS*T[i][j-1] + aN*T[i][j+1] + bP
-			T[i+1][j+1] = (volumes[i][j].get_aW() * T[i][j+1] + volumes[i][j].get_aE() * T[i+2][j+1] + volumes[i][j].get_aS() * T[i+1][j] + volumes[i][j].get_aN() * T[i+1][j+2] + volumes[i][j].get_bP()) / volumes[i][j].get_aP();
-		}
-	}
 }
-
-// Mesh::lineByLine() {
-// 	for (std::vector<Volume>::size_type i = 0; i < ; i++) {
-// 		volumes[i][j].getCoefficients();
-// 	}
-// }
 
 // std::vector<double> T Mesh::tdma() {
 // 	// aP*T[i] = aW*T[i-1] + aE*T[i+1] + bP[i]
