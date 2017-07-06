@@ -81,23 +81,9 @@ Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std:
 	}
 	volumes[N[0]+1].push_back(new Node({X[0][N[0]], X[1][N[1]]})); // bottom right corner
 
-	// // Initialize MxN matrix of volumes
-	// volumes.resize(N[0]); // use reserve if we only wanted to pre-allocate
-	// for (std::vector<double>::size_type i = 0; i < N[0]; i++) { // M
-	// 	for (std::vector<double>::size_type j = 0; j < N[1]; j++) { // N
-	// 		volumes[i].push_back(Volume({{X[0][i], X[0][i+1]}, {X[1][j], X[1][j+1]}}, depth, {i, j}, N, conditions));
-	// 		volumes[i][j].set_material(this->findMaterial(volumes[i][j].get_x(), materials));
-	// 	}
-	// }
-
-	std::cout << typeid(volumes).name() << std::endl;
-	// std::cout << typeid(*volumes).name() << std::endl;
-
 	// Setup missing parameters
 	for (std::vector<Node*>::size_type i = 0; i < volumes.size(); i++) {
 		for (std::vector<Node*>::size_type j = 0; j < volumes[i].size(); j++) {
-			// std::cout << i << " " << j << std::endl;
-			// std::cout << volumes[i][j]->get_x()[0] << " " << volumes[i][j]->get_x()[1] << std::endl;
 			volumes[i][j]->set_material(this->findMaterial(volumes[i][j]->get_x(), materials));
 			volumes[i][j]->set_neighbors({i, j}, volumes);
 		}

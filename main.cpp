@@ -15,13 +15,8 @@
 	#define INCLUDE_UTIL
 #endif
 
-/**
- * TODO
- * - Parallelize everything we can
- */
-
 int main(int argc, char** argv) {
-	// std::cout << "Welcome!" << std::endl;
+	std::cout << "Welcome!" << std::endl;
 
 	if (argc < 1 || argc > 2) {
 		throw std::invalid_argument("ERROR: Unexpected number of arguments.");
@@ -33,22 +28,17 @@ int main(int argc, char** argv) {
 	std::cout << "Setting up...";
 
 	// Boundary conditions
-	// std::vector< std::vector<Condition> > conditions = {{Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 200.0)}, {Condition(FLOW, 0.0), Condition(FLOW, 0.0)}};
-	// std::vector< std::vector<Condition> > conditions = {{Condition(FLOW, 0.0), Condition(FLOW, 0.0)}, {Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 200.0)}};
-	// std::vector< std::vector<Condition> > conditions = {{Condition(FLOW, 0.0), Condition(FLOW, 0.0)}, {Condition(ISOTHERM, 300.0), Condition(CONVECTION, 10.0, 350.0)}};
-	// std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 9.0, 306.15), Condition(ISOTHERM, 281.15, 0.005)}, {Condition(ISOTHERM, 296.15), Condition(FLOW, 60.0)}};
-	std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 10.0, 350.0), Condition(CONVECTION, 10.0, 350.0)}, {Condition(FLOW, 0.0), Condition(FLOW, 0.0)}};
+	std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 9.0, 306.15), Condition(ISOTHERM, 281.15, 0.005)}, {Condition(ISOTHERM, 296.15), Condition(FLOW, 60.0)}};
 
 	// Material properties
 	std::vector<Material> materials;
-	materials.push_back(Material({{0.0, 0.0}, {1.1, 0.8}}, 1500.0, 750.0, 10000000.0, 100.0));
-	// materials.push_back(Material({{0.0, 0.0}, {0.5, 0.4}}, 1500.0, 750.0, 170.0, 0.0));
-	// materials.push_back(Material({{0.5, 0.0}, {1.1, 0.7}}, 1600.0, 770.0, 140.0, 0.0));
-	// materials.push_back(Material({{0.0, 0.4}, {0.5, 0.8}}, 1900.0, 810.0, 200.0, 0.0));
-	// materials.push_back(Material({{0.5, 0.7}, {1.1, 0.8}}, 2500.0, 930.0, 140.0, 0.0));
+	materials.push_back(Material({{0.0, 0.0}, {0.5, 0.4}}, 1500.0, 750.0, 170.0, 0.0));
+	materials.push_back(Material({{0.5, 0.0}, {1.1, 0.7}}, 1600.0, 770.0, 140.0, 0.0));
+	materials.push_back(Material({{0.0, 0.4}, {0.5, 0.8}}, 1900.0, 810.0, 200.0, 0.0));
+	materials.push_back(Material({{0.5, 0.7}, {1.1, 0.8}}, 2500.0, 930.0, 140.0, 0.0));
 
 	// Mesh discretization
-	std::vector<unsigned int> N = {22, 16};
+	std::vector<unsigned int> N = {110, 80}; // {22, 16} to get results faster
 	Mesh mesh(1.0, N, materials, conditions);
 	std::vector< std::vector<Node*> > *volumes = mesh.get_volumes();
 
@@ -59,13 +49,13 @@ int main(int argc, char** argv) {
 	std::vector< std::vector<double> > Tmap, Tprev; // "supposed" T map, T map from previous time
 
 	// Numeric variables
-	double beta = 1; // implicit // 0.5; // Crank-Nicolson
+	double beta = 0.5; // Crank-Nicolson // 1 = implicit // 0 = explicit
 	double tDelta = 1.0; // s
 	double delta = 0.0000001; // precision: 1e-7
 	bool convergence;
 
 	// Time
-	double tOver = 5000; // s
+	double tOver = 5000.0; // s
 	double t = 0.0; // s
 	T.resize(int(tOver/tDelta)+1);
 
@@ -82,7 +72,7 @@ int main(int argc, char** argv) {
 		Tprev = T[k-1];
 		for (std::vector<double>::size_type i = 0; i < (*volumes).size(); i++) {
 			for (std::vector<double>::size_type j = 0; j < (*volumes)[i].size(); j++) {
-				std::cout << "{" << i << ", " << j << "}" << std::endl;
+				// std::cout << "{" << i << ", " << j << "}" << std::endl;
 				(*volumes)[i][j]->computeCoefficients(beta, tDelta, t, Tprev[i+1][j+1], {{Tprev[i][j+1], Tprev[i+2][j+1]}, {Tprev[i+1][j], Tprev[i+1][j+2]}});
 			}
 		}
@@ -102,8 +92,8 @@ int main(int argc, char** argv) {
 	std::cout << std::endl;
 
 	// Print some results
-	std::cout << "T at t = 5000s" << std::endl;
-	printMatrix(T[5000]);
+	std::cout << "T at t = " << k-1 << " seconds" << std::endl;
+	printMatrix(T[k-1]);
 
 	std::cout << "Bye-bye." << std::endl;
 	return 0;
