@@ -55,13 +55,14 @@ int main(int argc, char** argv) {
 	bool convergence;
 
 	// Time
-	double tOver = 5000.0; // s
+	double tOver = 10000.0; // s
 	double t = 0.0; // s
 	T.resize(int(tOver/tDelta)+1);
 
 	// Initial temperature
 	double Tini = 281.15; // K
 	T[0].resize(N[0]+4, std::vector<double>(N[1]+4, Tini)); // initial T map
+	// printMatrix(T[0]); // print Tini
 
 	std::vector<double>::size_type k = 1;
 	while (t < tOver) {
@@ -87,6 +88,9 @@ int main(int argc, char** argv) {
 		}
 
 		std::cout << " and converged." << std::endl;
+
+		// // Print all results
+		// printMatrix(T[k]);
 		k++;
 	}
 	std::cout << std::endl;
