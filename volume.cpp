@@ -19,7 +19,8 @@ Node::Node(const std::vector<double> &_x) {
 	x = _x;
 
 	// Initialize coefficients
-	aP = bP = 0.0;
+	aP = 1.0; // avoid divide by zero
+	bP = 0.0;
 	a = {{0.0, 0.0}, {0.0, 0.0}};
 }
 
@@ -113,15 +114,15 @@ void Boundary::set_neighbors(const std::vector<std::vector<Node*>::size_type> &i
 void Node::computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors) {
 	// No need to implement anything
 
-	std::cout << "CORNER" << std::endl;
-	std::cout << "aP = " << aP << std::endl;
-	std::cout << "bP = " << bP << std::endl;
-	printMatrix(a);
+	// std::cout << "CORNER" << std::endl;
+	// std::cout << "aP = " << aP << std::endl;
+	// std::cout << "bP = " << bP << std::endl;
+	// printMatrix(a);
 }
 
 void Volume::computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors) {
 	// Inner volumes
-	std::cout << "INNER" << std::endl;
+	// std::cout << "INNER" << std::endl;
 
 	aP = this->get_material()->get_rho() * this->get_material()->get_cp() * this->get_V() / tDelta;
 	bP = aP * Tprev + beta * this->get_material()->get_qv() * this->get_V();
@@ -135,14 +136,14 @@ void Volume::computeCoefficients(const double &beta, const double &tDelta, const
 		}
 	}
 
-	std::cout << "aP = " << aP << std::endl;
-	std::cout << "bP = " << bP << std::endl;
-	printMatrix(a);
+	// std::cout << "aP = " << aP << std::endl;
+	// std::cout << "bP = " << bP << std::endl;
+	// printMatrix(a);
 }
 
 void Boundary::computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors) {
 	// Boundary volumes
-	std::cout << "BOUNDARY" << std::endl;
+	// std::cout << "BOUNDARY" << std::endl;
 
 	// Isotherm
 	if (condition->get_conditionType() == ISOTHERM) {
@@ -173,9 +174,9 @@ void Boundary::computeCoefficients(const double &beta, const double &tDelta, con
 		}
 	}
 
-	std::cout << "aP = " << aP << std::endl;
-	std::cout << "bP = " << bP << std::endl;
-	printMatrix(a);
+	// std::cout << "aP = " << aP << std::endl;
+	// std::cout << "bP = " << bP << std::endl;
+	// printMatrix(a);
 }
 
 double Volume::computeLambda(const std::vector<Volume>::size_type &i, const Node &neighbor) {
