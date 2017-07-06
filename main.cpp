@@ -21,7 +21,7 @@
  */
 
 int main(int argc, char** argv) {
-	std::cout << "Welcome!" << std::endl;
+	// std::cout << "Welcome!" << std::endl;
 
 	if (argc < 1 || argc > 2) {
 		throw std::invalid_argument("ERROR: Unexpected number of arguments.");
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
 	/* Here will read config file (either default or provided by the user) and get all parameters */
 
-	std::cout << "Setting up...";
+	// std::cout << "Setting up...";
 
 	// Boundary conditions
 	// std::vector< std::vector<Condition> > conditions = {{Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 200.0)}, {Condition(FLOW, 0.0), Condition(FLOW, 0.0)}};
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	std::cout << " and done." << std::endl;
+	// std::cout << " and done." << std::endl;
 
 	// Temperature fields
 	std::vector< std::vector <std::vector<double> > > T; // time x N[0] x N[1]
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 	bool convergence;
 
 	// Time
-	double tOver = 100.0; // 5000.0; // s
+	double tOver = 5000.0; // 5000.0; // s
 	double t = 0.0; // s
 	T.resize(int(tOver/tDelta)+1);
 
@@ -105,12 +105,12 @@ int main(int argc, char** argv) {
 		// std::cout << " and converged." << std::endl;
 		k++;
 	}
-	std::cout << std::endl;
+	// std::cout << std::endl;
 
 	// Print some results
-	std::cout << "T at t = 5000s" << std::endl;
-	printMatrix(T[100]);
+	// std::cout << "T at t = 5000s" << std::endl;
+	printMatrix(T[5000]);
 
-	std::cout << "Bye-bye." << std::endl;
+	// std::cout << "Bye-bye." << std::endl;
 	return 0;
 }
