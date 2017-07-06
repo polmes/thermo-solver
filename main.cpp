@@ -33,14 +33,14 @@ int main(int argc, char** argv) {
 	// std::cout << "Setting up...";
 
 	// Boundary conditions
-	// std::vector< std::vector<Condition> > conditions = {{Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 200.0)}, {Condition(FLOW, 0.0), Condition(FLOW, 0.0)}};
-	// std::vector< std::vector<Condition> > conditions = {{Condition(FLOW, 0.0), Condition(FLOW, 0.0)}, {Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 200.0)}};
-	// std::vector< std::vector<Condition> > conditions = {{Condition(FLOW, 0.0), Condition(FLOW, 0.0)}, {Condition(ISOTHERM, 300.0), Condition(CONVECTION, 10.0, 350.0)}};
+	// std::vector< std::vector<Condition> > conditions = {{Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 400.0)}, {Condition(FLOW, 0.0), Condition(FLOW, 0.0)}};
+	// std::vector< std::vector<Condition> > conditions = {{Condition(FLOW, 0.0), Condition(FLOW, 0.0)}, {Condition(ISOTHERM, 300.0), Condition(ISOTHERM, 400.0)}};
+	// std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 10.0, 300.0), Condition(CONVECTION, 10.0, 300.0)}, {Condition(FLOW, 0.0), Condition(FLOW, 0.0)}};
 	std::vector< std::vector<Condition> > conditions = {{Condition(CONVECTION, 9.0, 306.15), Condition(ISOTHERM, 281.15, 0.005)}, {Condition(ISOTHERM, 296.15), Condition(FLOW, -60.0)}};
 
 	// Material properties
 	std::vector<Material> materials;
-	// materials.push_back(Material({{0.0, 0.0}, {1.1, 0.8}}, 1500.0, 750.0, 170.0, 0.0));
+	// materials.push_back(Material({{0.0, 0.0}, {1.1, 0.8}}, 1000.0, 1000.0, 1000.0, 100.0));
 	materials.push_back(Material({{0.0, 0.0}, {0.5, 0.4}}, 1500.0, 750.0, 170.0, 0.0));
 	materials.push_back(Material({{0.5, 0.0}, {1.1, 0.7}}, 1600.0, 770.0, 140.0, 0.0));
 	materials.push_back(Material({{0.0, 0.4}, {0.5, 0.8}}, 1900.0, 810.0, 200.0, 0.0));
@@ -71,14 +71,14 @@ int main(int argc, char** argv) {
 	bool convergence;
 
 	// Time
-	double tOver = 10000.0; // s
+	double tOver = 5000.0; // s
 	double t = 0.0; // s
 	T.resize(int(tOver/tDelta)+1);
 
 	// Initial temperature
 	double Tini = 281.15; // K
 	T[0].resize(N[0]+2, std::vector<double>(N[1]+2, Tini)); // initial T map
-	printMatrix(T[0]);
+	// printMatrix(T[0]);
 
 	std::vector<double>::size_type k = 1;
 	while (t < tOver) {
@@ -104,14 +104,14 @@ int main(int argc, char** argv) {
 		}
 
 		// std::cout << " and converged." << std::endl;
-		printMatrix(T[k]);
+		// printMatrix(T[k]);
 		k++;
 	}
 	// std::cout << std::endl;
 
 	// Print some results
-	// std::cout << "T at t = 5000s" << std::endl;
-	// printMatrix(T[5000]);
+	// std::cout << "T at t = end" << std::endl;
+	printMatrix(T[k-1]);
 
 	// std::cout << "Bye-bye." << std::endl;
 	return 0;
