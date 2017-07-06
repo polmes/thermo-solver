@@ -97,16 +97,16 @@ void Boundary::set_neighbors(const std::vector<std::vector<Node*>::size_type> &i
 	// Since we cannot have ij[0] == ij[1]...
 	if (ij[0] == 0) { // left
 		neighbor = volumes[1][ij[1]];
-		neighbors = {{1, 0}, {0, 0}};
+		neighbors = {{0, 1}, {0, 0}};
 	} else if (ij[0] == volumes.size()-1) { // right
 		neighbor = volumes[ij[0]-1][ij[1]];
-		neighbors = {{0, 1}, {0, 0}};
+		neighbors = {{1, 0}, {0, 0}};
 	} else if (ij[1] == 0) { // bottom
 		neighbor = volumes[ij[0]][1];
-		neighbors = {{0, 0}, {1, 0}};
+		neighbors = {{0, 0}, {0, 1}};
 	} else if (ij[1] == volumes[ij[0]].size()-1) { // top
 		neighbor = volumes[ij[0]][ij[1]-1];
-		neighbors = {{0, 0}, {0, 1}};
+		neighbors = {{0, 0}, {1, 0}};
 	}
 }
 
