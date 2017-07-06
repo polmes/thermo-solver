@@ -12,13 +12,11 @@ make # compile all them files
 ### Phase 1 (*currently under development*)
 - 2D transient conduction analysis with multiple materials
 
-#### Phase 1A
-- Smallest mesh discretization for all materials, using a line-by-line solver
-- Parallel computation of horizontal and vertical lines
-
-#### Phase 1B
-- Independent mesh discretization for each material, using a Gauss-Seidel solver for internal boundary nodes
-- Parallel computation of each material region
+#### Improvements
+- Divide in as many regions as CPUs (use `std::thread::hardware_concurrency()`)
+- Solve each region with a line-by-line solver with supposed `Tboundaries`
+- Each region communicates the new `Tboundaries` to the surrounding ones (and back)
+- Polymorphism for the `Condition` class: make derived `Convection`, `Isotherm`, `Flow` `Adiabatic` classes
 
 ### Phase 2
 - Navier-Stokes discretization: mass + momentum + (energy)
