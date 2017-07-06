@@ -11,6 +11,7 @@ make # compile all them files
 ## Features
 ### Phase 1 (*currently under development*)
 - 2D transient conduction analysis with multiple materials
+![Temperatures Evolution with Time](plots/map.gif)
 
 #### Improvements
 - Divide in as many regions as CPUs (use `std::thread::hardware_concurrency()`)
