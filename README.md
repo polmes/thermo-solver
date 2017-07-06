@@ -1,6 +1,8 @@
 # Thermodynamics Simulation
 Heat Transfer simulator using a Finite Volumes solver for *Gas Dynamics*
 
+![Temperatures Evolution with Time](plots/map.gif)
+
 ## Instructions
 First of all, make sure [`g++-6`](https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test) is installed and available in the `$PATH`. Then:
 ```bash
@@ -11,7 +13,6 @@ make # compile all them files
 ## Features
 ### Phase 1 (*currently under development*)
 - 2D transient conduction analysis with multiple materials
-![Temperatures Evolution with Time](plots/map.gif)
 
 #### Improvements
 - Divide in as many regions as CPUs (use `std::thread::hardware_concurrency()`)
