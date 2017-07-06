@@ -26,7 +26,7 @@ void printMatrix(std::vector< std::vector<T> > matrix) {
 		}
 		std::cout << '\n';
 	}
-	std::cout << std::endl;
+	std::cout << std::flush; // std::endl;
 }
 
 template <typename T>
@@ -53,10 +53,6 @@ template <typename T>
 bool checkConvergence(std::vector< std::vector<T> > &A, std::vector< std::vector<T> > &B, const double &delta) {
 	for (typename std::vector<T>::size_type i = 0; i < A.size(); i++) {
 		for (typename std::vector<T>::size_type j = 0; j < A[0].size(); j++) {
-			// std::cout << "DELTA: " << delta << std::endl;
-			// std::cout << "ABS: " << abs(A[i][j] - B[i][j]) << std::endl;
-			// std::cout << "STDABS: " << std::abs(A[i][j] - B[i][j]) << std::endl;
-			// std::cout << A[i][j] << " - " << B[i][j] << " = " << (A[i][j] - B[i][j]) << std::endl;
 			if (std::abs(A[i][j] - B[i][j]) > delta) return false;
 		}
 	}

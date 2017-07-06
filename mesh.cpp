@@ -11,10 +11,10 @@
 	#define INCLUDE_UTIL
 #endif
 
-Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const std::vector< std::vector<Condition> > &_conditions) {
+Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std::vector<Material> &materials, const std::vector< std::vector<Condition> > &conditions) {
 	N = _N;
 	depth = _depth;
-	conditions = _conditions;
+	// conditions = _conditions;
 
 	// Get list of boundaries
 	std::vector< std::vector<double> > boundaries;
@@ -61,12 +61,31 @@ Mesh::Mesh(const double &_depth, const std::vector<unsigned int> &_N, const std:
 	// std::cout << "X" << std::endl;
 	// printMatrix(X);
 
-	// Initialize MxN matrix of volumes
-	volumes.resize(N[0]); // use reserve if we only wanted to pre-allocate
-	for (std::vector<double>::size_type i = 0; i < N[0]; i++) { // M
-		for (std::vector<double>::size_type j = 0; j < N[1]; j++) { // N
-			volumes[i].push_back(Volume({{X[0][i], X[0][i+1]}, {X[1][j], X[1][j+1]}}, depth, {i, j}, N, conditions));
-			volumes[i][j].set_material(this->findMaterial(volumes[i][j].get_x(), materials));
+	// Initialize MxN matrix of "volumes"
+	volumes.resize(N[0]+2); // use reserve if we only wanted to pre-allocate
+	volumes[0].push_back(new Node({X[0][0], X[1][0]})); // bottom left corner
+	for (std::vector<double>::size_type j = 0; j < N[1]; j++) { // N
+		volumes[0].push_back(new Boundary({X[0][0], (X[1][j]+X[1][j+1])/2}, conditions[0][0])); // first column
+	}
+	volumes[0].push_back(new Node({X[0][0], X[1][N[1]]})); // top left corner
+	for (std::vector<double>::size_type i = 1; i < N[0]+1; i++) { // M+2
+		volumes[i].push_back(new Boundary({(X[0][i-1]+X[0][i])/2, X[1][0]},  conditions[1][0])); // bottom
+		for (std::vector<double>::size_type j = 1; j < N[1]+1; j++) { // N+2
+			volumes[i].push_back(new Volume({{X[0][i-1], X[0][i]}, {X[1][j-1], X[1][j]}}, depth)); // inner
+		}
+		volumes[i].push_back(new Boundary({(X[0][i-1]+X[0][i])/2, X[1][N[1]]},  conditions[1][1])); // top
+	}
+	volumes[N[0]+1].push_back(new Node({X[0][N[0]], X[1][0]})); // bottom right corner
+	for (std::vector<double>::size_type j = 0; j < N[1]; j++) { // N
+		volumes[N[0]+1].push_back(new Boundary({X[0][N[0]], (X[1][j]+X[1][j+1])/2}, conditions[0][1])); // last column
+	}
+	volumes[N[0]+1].push_back(new Node({X[0][N[0]], X[1][N[1]]})); // bottom right corner
+
+	// Setup missing parameters
+	for (std::vector<Node*>::size_type i = 0; i < volumes.size(); i++) {
+		for (std::vector<Node*>::size_type j = 0; j < volumes[i].size(); j++) {
+			volumes[i][j]->set_material(this->findMaterial(volumes[i][j]->get_x(), materials));
+			volumes[i][j]->set_neighbors({i, j}, volumes);
 		}
 	}
 }
@@ -82,7 +101,7 @@ const Material* Mesh::findMaterial(const std::vector<double> &x, const std::vect
 	return nullptr; // error handling
 }
 
-std::vector< std::vector<Volume> >* Mesh::get_volumes() {
+std::vector< std::vector<Node*> >* Mesh::get_volumes() {
 	return &volumes;
 }
 
@@ -91,7 +110,7 @@ void Mesh::solve(std::vector< std::vector<double> > &T) {
 	for (std::vector< std::vector<double> >::size_type i = 0; i < volumes.size(); i++) {
 		for (std::vector< std::vector<double> >::size_type j = 0; j < volumes[i].size(); j++) {
 			// aP*T[i][j] = aW*T[i-1][j] + aE*T[i+1][j] + aS*T[i][j-1] + aN*T[i][j+1] + bP
-			T[i+1][j+1] = (volumes[i][j].get_aW() * T[i][j+1] + volumes[i][j].get_aE() * T[i+2][j+1] + volumes[i][j].get_aS() * T[i+1][j] + volumes[i][j].get_aN() * T[i+1][j+2] + volumes[i][j].get_bP()) / volumes[i][j].get_aP();
+			T[i+1][j+1] = (volumes[i][j]->get_aW() * T[i][j+1] + volumes[i][j]->get_aE() * T[i+2][j+1] + volumes[i][j]->get_aS() * T[i+1][j] + volumes[i][j]->get_aN() * T[i+1][j+2] + volumes[i][j]->get_bP()) / volumes[i][j]->get_aP();
 		}
 	}
 

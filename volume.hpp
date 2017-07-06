@@ -11,32 +11,24 @@
 	#define INCLUDE_CONDITION
 #endif
 
-class Volume {
+class Node {
 	private:
-		const double *depth;
-		std::vector<double> x; // node coordinates
-		std::vector<double> S; // {vertical, horizontal} areas
-		std::vector<double> d; // {horizontal, vertical} distance to volume boundary
-		std::vector< std::vector<const Condition*> > conditions; // {{W, E}, {S, N}}
-		bool isBoundary; // is this a boundary (outer) volume?
-		double V; // volume volume
 		const Material *material; // material properties: rho, cp, lambda, qv
-		double aP, bP; // coefficients
+
+	protected:
+		std::vector<double> x; // node coordinates
+		std::vector<double> d; // {horizontal, vertical} distance to "volume" boundary
+		double aP, bP; // some coefficients
 		std::vector< std::vector<double> > a; // more coefficients: {{aW, aE}, {aS, aN}}
-		std::vector< std::vector<const Volume*> > neighbors; // surrounding volumes
 
 	public:
 		// Constructors
-		Volume(const std::vector< std::vector<double> > &X, const double &_depth, const std::vector<std::vector<double>::size_type> &ij, const std::vector<unsigned int> &N, const std::vector< std::vector<Condition> > &_conditions);
-
-		// Destructors
-		// ~Volume(); // should delete dangling pointers
+		Node();
+		Node(const std::vector<double> &_x);
 
 		// Getters
-		double get_depth() const;
 		std::vector<double> get_x() const;
 		std::vector<double> get_d() const;
-		double get_V() const;
 		const Material* get_material() const;
 		double get_aP() const;
 		double get_aW() const;
@@ -47,9 +39,49 @@ class Volume {
 
 		// Setters
 		void set_material(const Material *_material);
-		void set_neighbors(const std::vector<std::vector<double>::size_type> &ij, const std::vector< std::vector<Volume> > &volumes);
+		virtual void set_neighbors(const std::vector<std::vector<double>::size_type> &ij, const std::vector< std::vector<Node*> > &volumes);
+
+		// Methods
+		virtual void computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors);
+};
+
+class Volume: public Node {
+	private:
+		std::vector<double> S; // {vertical, horizontal} areas
+		double V; // volume volume
+		std::vector< std::vector<Node*> > neighbors; // surrounding volumes
+
+	public:
+		// Constructors
+		Volume(const std::vector< std::vector<double> > &X, const double &depth);
+
+		// Destructors
+		// ~Volume(); // should delete dangling pointers
+
+		// Getters
+		double get_V() const;
+
+		// Setters
+		void set_neighbors(const std::vector<std::vector<double>::size_type> &ij, const std::vector< std::vector<Node*> > &volumes);
 
 		// Methods
 		void computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors);
-		double computeLambda(const std::vector<Volume>::size_type &i, const Volume &neighbor);
+		double computeLambda(const std::vector<Volume>::size_type &i, const Node &neighbor);
+};
+
+class Boundary: public Node {
+	private:
+		const Condition* condition; // boundary condition
+		Node* neighbor; // immediate next volume
+		std::vector< std::vector<bool> > neighbors; // where is the neighbor?
+
+	public:
+		// Constructors
+		Boundary(const std::vector<double> &_x, const Condition &_condition);
+
+		// Setters
+		void set_neighbors(const std::vector<std::vector<double>::size_type> &ij, const std::vector< std::vector<Node*> > &volumes);
+
+		// Methods
+		void computeCoefficients(const double &beta, const double &tDelta, const double &t, const double &Tprev, const std::vector< std::vector<double> > &Tneighbors);
 };
