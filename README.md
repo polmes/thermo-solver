@@ -1,5 +1,5 @@
-# Thermodynamics Simulation
-Heat Transfer simulator using a Finite Volumes solver for *Gas Dynamics*
+# Thermo Solver
+Thermal conduction simulator using a Finite Volumes solver for *Gas Dynamics and Heat and Mass Trasnsfer*
 
 ![Temperatures Evolution with Time](plots/map.gif)
 
