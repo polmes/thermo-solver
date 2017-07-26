@@ -11,20 +11,14 @@ make # compile all them files
 ```
 
 ## Features
-### Phase 1 (*currently under development*)
-- 2D transient conduction analysis with multiple materials
+- 2D transient conduction analysis
+- With multiple materials
+- Easily configurable boundary conditions
 
 #### Improvements
+- Read input data from user-supplied `config.dat`
 - Divide in as many regions as CPUs (use `std::thread::hardware_concurrency()`)
 - Solve each region with a line-by-line solver with supposed `Tboundaries`
 - Each region communicates the new `Tboundaries` to the surrounding ones (and back)
 - Polymorphism for the `Condition` class: make derived `Convection`, `Isotherm`, `Flow` `Adiabatic` classes
-
-### Phase 2
-- Navier-Stokes discretization: mass + momentum + (energy)
-
-### Phase 3
-- Convection with 2D laminar flow
-
-### Phase 4
-- Convection with 3D turbulent flow
+- Create a `Matrix` class using `std::vector` with smart indexing
